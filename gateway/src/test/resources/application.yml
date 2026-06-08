@@ -4,9 +4,3 @@ spring:
   cloud:
     config:
       enabled: false
-
-de:
-  flapdoodle:
-    mongodb:
-      embedded:
-        version: 6.0.9

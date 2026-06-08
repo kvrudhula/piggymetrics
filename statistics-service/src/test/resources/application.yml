@@ -1,16 +1,35 @@
-hystrix:
-  command:
-    default:
-      execution:
-        isolation:
-          thread:
-            timeoutInMilliseconds: 20000
-
 spring:
-  data:
+  config:
+    import: "optional:configserver:"
+  cloud:
+    config:
+      enabled: false
+    openfeign:
+      circuitbreaker:
+        enabled: true
+  security:
+    oauth2:
+      resourceserver:
+        opaquetoken:
+          introspection-uri: http://localhost:5000/uaa/oauth2/introspect
+          client-id: statistics-service
+          client-secret: test
+      client:
+        registration:
+          statistics-service:
+            client-id: statistics-service
+            client-secret: test
+            authorization-grant-type: client_credentials
+            scope: server
+        provider:
+          statistics-service:
+            token-uri: http://localhost:5000/uaa/oauth2/token
+
+de:
+  flapdoodle:
     mongodb:
-      database: piggymetrics
-      port: 0
+      embedded:
+        version: 6.0.9
 
 rates:
   url: https://api.exchangeratesapi.io

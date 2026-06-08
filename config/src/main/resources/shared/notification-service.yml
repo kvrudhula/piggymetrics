@@ -1,11 +1,42 @@
-security:
-  oauth2:
-    client:
-      clientId: notification-service
-      clientSecret: ${NOTIFICATION_SERVICE_PASSWORD}
-      accessTokenUri: http://auth-service:5000/uaa/oauth/token
-      grant-type: client_credentials
-      scope: server
+spring:
+  data:
+    mongodb:
+      host: notification-mongodb
+      username: user
+      password: ${MONGODB_PASSWORD}
+      database: piggymetrics
+      port: 27017
+  security:
+    oauth2:
+      resourceserver:
+        opaquetoken:
+          client-id: notification-service
+          client-secret: ${NOTIFICATION_SERVICE_PASSWORD}
+      client:
+        registration:
+          notification-service:
+            client-id: notification-service
+            client-secret: ${NOTIFICATION_SERVICE_PASSWORD}
+            authorization-grant-type: client_credentials
+            scope: server
+        provider:
+          notification-service:
+            token-uri: http://auth-service:5000/uaa/oauth2/token
+  mail:
+    host: smtp.gmail.com
+    port: 465
+    username: dev-user
+    password: dev-password
+    properties:
+      mail:
+        smtp:
+          auth: true
+          socketFactory:
+            port: 465
+            class: javax.net.ssl.SSLSocketFactory
+            fallback: false
+          ssl:
+            enable: true
 
 server:
   servlet:
@@ -24,27 +55,3 @@ backup:
     text: "Howdy, {0}. Your account backup is ready.\r\n\r\nCheers,\r\nPiggyMetrics team"
     subject: PiggyMetrics account backup
     attachment: backup.json
-
-spring:
-  data:
-    mongodb:
-      host: notification-mongodb
-      username: user
-      password: ${MONGODB_PASSWORD}
-      database: piggymetrics
-      port: 27017
-  mail:
-    host: smtp.gmail.com
-    port: 465
-    username: dev-user
-    password: dev-password
-    properties:
-      mail:
-        smtp:
-          auth: true
-          socketFactory:
-            port: 465
-            class: javax.net.ssl.SSLSocketFactory
-            fallback: false
-          ssl:
-            enable: true

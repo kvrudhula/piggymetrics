@@ -1,45 +1,31 @@
-hystrix:
-  command:
-    default:
-      execution:
-        isolation:
-          thread:
-            timeoutInMilliseconds: 20000
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: auth-service
+          uri: http://auth-service:5000
+          predicates:
+            - Path=/uaa/**
+          filters:
+            - PreserveHostHeader
 
-ribbon:
-  ReadTimeout: 20000
-  ConnectTimeout: 20000
+        - id: account-service
+          uri: lb://account-service
+          predicates:
+            - Path=/accounts/**
 
-zuul:
-  ignoredServices: '*'
-  host:
-    connect-timeout-millis: 20000
-    socket-timeout-millis: 20000
+        - id: statistics-service
+          uri: lb://statistics-service
+          predicates:
+            - Path=/statistics/**
 
-  routes:
-    auth-service:
-        path: /uaa/**
-        url: http://auth-service:5000
-        stripPrefix: false
-        sensitiveHeaders:
+        - id: notification-service
+          uri: lb://notification-service
+          predicates:
+            - Path=/notifications/**
 
-    account-service:
-        path: /accounts/**
-        serviceId: account-service
-        stripPrefix: false
-        sensitiveHeaders:
-
-    statistics-service:
-        path: /statistics/**
-        serviceId: statistics-service
-        stripPrefix: false
-        sensitiveHeaders:
-
-    notification-service:
-        path: /notifications/**
-        serviceId: notification-service
-        stripPrefix: false
-        sensitiveHeaders:
+      default-filters:
+        - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
 
 server:
   port: 4000

@@ -1,5 +1,32 @@
 spring:
-  data:
+  config:
+    import: "optional:configserver:"
+  cloud:
+    config:
+      enabled: false
+    openfeign:
+      circuitbreaker:
+        enabled: true
+  security:
+    oauth2:
+      resourceserver:
+        opaquetoken:
+          introspection-uri: http://localhost:5000/uaa/oauth2/introspect
+          client-id: account-service
+          client-secret: test
+      client:
+        registration:
+          account-service:
+            client-id: account-service
+            client-secret: test
+            authorization-grant-type: client_credentials
+            scope: server
+        provider:
+          account-service:
+            token-uri: http://localhost:5000/uaa/oauth2/token
+
+de:
+  flapdoodle:
     mongodb:
-      database: piggymetrics
-      port: 0
+      embedded:
+        version: 6.0.9
