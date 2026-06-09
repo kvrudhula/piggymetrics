@@ -17,8 +17,6 @@ spring:
       resourceserver:
         opaquetoken:
           introspection-uri: http://auth-service:5000/uaa/oauth2/introspect
-          client-id: account-service
-          client-secret: ${ACCOUNT_SERVICE_PASSWORD}
   cloud:
     openfeign:
       circuitbreaker:
